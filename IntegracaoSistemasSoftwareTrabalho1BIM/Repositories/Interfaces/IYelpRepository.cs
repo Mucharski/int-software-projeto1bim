@@ -1,6 +1,6 @@
 ﻿namespace IntegracaoSistemasSoftwareTrabalho1BIM.Repositories.Interfaces;
 
-public class IYelpRepository
+public interface IYelpRepository
 {
-    
+    public Task<string> ListRestaurants();
 }

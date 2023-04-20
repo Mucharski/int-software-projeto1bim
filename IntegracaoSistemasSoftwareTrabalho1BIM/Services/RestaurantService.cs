@@ -1,6 +1,8 @@
-﻿namespace IntegracaoSistemasSoftwareTrabalho1BIM.Services;
+﻿using IntegracaoSistemasSoftwareTrabalho1BIM.Services.Interfaces;
 
-public class RestaurantService
+namespace IntegracaoSistemasSoftwareTrabalho1BIM.Services;
+
+public class RestaurantService : IRestaurantService
 {
     
 }

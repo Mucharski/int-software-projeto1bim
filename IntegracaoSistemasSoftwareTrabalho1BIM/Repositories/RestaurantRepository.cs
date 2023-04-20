@@ -1,6 +1,8 @@
-﻿namespace IntegracaoSistemasSoftwareTrabalho1BIM.Repositories;
+﻿using IntegracaoSistemasSoftwareTrabalho1BIM.Repositories.Interfaces;
 
-public class RestaurantRepository
+namespace IntegracaoSistemasSoftwareTrabalho1BIM.Repositories;
+
+public class RestaurantRepository : IRestaurantRepository
 {
     
 }
