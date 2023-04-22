@@ -1,6 +1,8 @@
-﻿namespace IntegracaoSistemasSoftwareTrabalho1BIM.Repositories.Interfaces;
+﻿using IntegracaoSistemasSoftwareTrabalho1BIM.Entities.Yelp;
+
+namespace IntegracaoSistemasSoftwareTrabalho1BIM.Repositories.Interfaces;
 
 public interface IYelpRepository
 {
-    public Task<string> ListRestaurants();
+    public Task<BusinessesJsonReturn> ListRestaurants(string location);
 }

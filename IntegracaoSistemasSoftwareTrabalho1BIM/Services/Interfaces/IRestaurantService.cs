@@ -2,5 +2,5 @@
 
 public interface IRestaurantService
 {
-    
+    public Task InitializeRestaurants(string location);
 }
