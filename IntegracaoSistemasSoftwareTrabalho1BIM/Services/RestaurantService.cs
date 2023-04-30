@@ -1,4 +1,5 @@
-﻿using IntegracaoSistemasSoftwareTrabalho1BIM.Entities.Yelp;
+﻿using IntegracaoSistemasSoftwareTrabalho1BIM.Data.Models;
+using IntegracaoSistemasSoftwareTrabalho1BIM.Entities.Yelp;
 using IntegracaoSistemasSoftwareTrabalho1BIM.Repositories.Interfaces;
 using IntegracaoSistemasSoftwareTrabalho1BIM.Services.Interfaces;
 
@@ -18,5 +19,18 @@ public class RestaurantService : IRestaurantService
     public async Task InitializeRestaurants(string location)
     {
         BusinessesJsonReturn restaurants = await _yelpRepository.ListRestaurants(location);
+
+        await CreateRestaurants(restaurants);
     }
+
+    public async Task<List<RestaurantModel>> ListRestaurants()
+    {
+        return _repository.List();
+    }
+
+    private async Task CreateRestaurants(BusinessesJsonReturn restaurants)
+    {
+        await _repository.CreateRestaurants(restaurants);
+    }
+    
 }
