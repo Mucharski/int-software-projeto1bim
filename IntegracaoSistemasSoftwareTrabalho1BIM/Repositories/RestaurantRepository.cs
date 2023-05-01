@@ -32,4 +32,30 @@ public class RestaurantRepository : IRestaurantRepository
     {
         return _context.Restaurants.Include(a => a.Addresses).ToList();
     }
+
+    public async Task<int> Edit(RestaurantModel restaurant)
+    {
+        var entity = await _context.Restaurants.FindAsync(restaurant.Id);
+
+        if (entity == null)
+        {
+            return 0;
+        }
+
+        entity.Name = restaurant.Name == null ? entity.Name : restaurant.Name;
+        entity.Phone = restaurant.Phone == null ? entity.Phone : restaurant.Phone;
+
+        await _context.SaveChangesAsync();
+
+        return 1;
+    }
+
+    public async Task Delete(int id)
+    {
+        RestaurantModel restaurantModel = new (){Id = id};  
+        
+        _context.Restaurants.Entry(restaurantModel).State = EntityState.Deleted;  
+        
+        await _context.SaveChangesAsync();   
+    }
 }

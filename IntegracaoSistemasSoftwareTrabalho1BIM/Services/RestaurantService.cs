@@ -28,6 +28,18 @@ public class RestaurantService : IRestaurantService
         return _repository.List();
     }
 
+    public Task<int> EditRestaurant(int id, string name, string phone)
+    {
+        RestaurantModel model = new() {Id = id, Name = name, Phone = phone};
+        
+        return _repository.Edit(model);
+    }
+
+    public async Task DeleteRestaurant(int id)
+    {
+        await _repository.Delete(id);
+    }
+
     private async Task CreateRestaurants(BusinessesJsonReturn restaurants)
     {
         await _repository.CreateRestaurants(restaurants);
