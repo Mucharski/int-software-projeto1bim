@@ -1,7 +1,10 @@
-﻿using IntegracaoSistemasSoftwareTrabalho1BIM.Data.Models;
+﻿using System.Text;
+using IntegracaoSistemasSoftwareTrabalho1BIM.Data.Models;
 using IntegracaoSistemasSoftwareTrabalho1BIM.Entities.Yelp;
 using IntegracaoSistemasSoftwareTrabalho1BIM.Repositories.Interfaces;
 using IntegracaoSistemasSoftwareTrabalho1BIM.Services.Interfaces;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
 
 namespace IntegracaoSistemasSoftwareTrabalho1BIM.Services;
 
@@ -21,6 +24,8 @@ public class RestaurantService : IRestaurantService
         BusinessesJsonReturn restaurants = await _yelpRepository.ListRestaurants(location);
 
         await CreateRestaurants(restaurants);
+
+        SendNewRestaurantsToQueue(restaurants);
     }
 
     public async Task<List<RestaurantModel>> ListRestaurants()
@@ -38,6 +43,34 @@ public class RestaurantService : IRestaurantService
     public async Task DeleteRestaurant(int id)
     {
         await _repository.Delete(id);
+    }
+
+    public void SendNewRestaurantsToQueue(BusinessesJsonReturn restaurants)
+    {
+        var factory = new ConnectionFactory { HostName = "localhost" };
+        using var connection = factory.CreateConnection();
+        using var channel = connection.CreateModel();
+
+        channel.QueueDeclare(queue: "new-restaurants",
+            durable: false,
+            exclusive: false,
+            autoDelete: false);
+
+        foreach (var restaurant in restaurants.Businesses)
+        {
+            var model = new RestaurantModel(restaurant);
+            
+            string message = JsonConvert.SerializeObject(model);
+
+            var body = Encoding.UTF8.GetBytes(message);
+        
+            channel.BasicPublish(exchange: string.Empty,
+                routingKey: "new-restaurants",
+                basicProperties: null,
+                body: body);
+        }
+
+        Console.WriteLine($"Mensagem enviada!");
     }
 
     private async Task CreateRestaurants(BusinessesJsonReturn restaurants)
